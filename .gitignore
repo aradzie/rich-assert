@@ -1,0 +1,16 @@
+# Compiled output
+**/lib/
+
+# Other
+node_modules/
+build/
+out/
+tmp/
+sandbox/
+.vscode/
+.idea/
+*.tsbuildinfo
+*.log
+*.bak
+*.tgz
+*~

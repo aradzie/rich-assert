@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "name": "rich-assert-tests",
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "compile": "rm -fr lib; tsc",
+    "test": "node --enable-source-maps --test"
+  },
+  "dependencies": {
+    "rich-assert": "*",
+    "@types/node": "^22.9.1"
+  }
+}

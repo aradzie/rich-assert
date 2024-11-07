@@ -1,0 +1,22 @@
+{
+  "name": "rich-assert",
+  "version": "0.0.1",
+  "homepage": "https://github.com/aradzie/rich-assert#readme",
+  "repository": "aradzie/rich-assert",
+  "license": "MIT",
+  "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
+  "description": "A rich assert library for the node test runner.",
+  "keywords": [
+    "assert",
+    "test"
+  ],
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "compile": "rm -fr lib; tsc"
+  }
+}

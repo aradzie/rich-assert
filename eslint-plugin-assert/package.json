@@ -1,0 +1,26 @@
+{
+  "name": "eslint-plugin-rich-assert",
+  "version": "0.0.1",
+  "homepage": "https://github.com/aradzie/rich-assert#readme",
+  "repository": "aradzie/rich-assert",
+  "license": "MIT",
+  "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
+  "description": "An eslint plugin for the rich assert library.",
+  "keywords": [
+    "eslint",
+    "assert",
+    "test"
+  ],
+  "type": "module",
+  "main": "lib/index.js",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "compile": "rm -fr lib; tsc",
+    "test": "node --enable-source-maps --test"
+  },
+  "peerDependencies": {
+    "eslint": ">=9.0"
+  }
+}
