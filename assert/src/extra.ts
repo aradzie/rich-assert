@@ -173,7 +173,7 @@ type Constructor<T> = {
   new (...args: any[]): T;
 };
 
-export const isInstanceof = <T>(
+export const isInstanceOf = <T>(
   actual: unknown,
   constructor: Constructor<T>,
   message?: string,
@@ -181,7 +181,7 @@ export const isInstanceof = <T>(
   if (!(actual instanceof constructor)) {
     throw new AssertionError({
       message: message || `Expected ${format(actual)} to be an instance of ${constructor.name}`,
-      stackStartFn: isInstanceof,
+      stackStartFn: isInstanceOf,
     });
   }
 };

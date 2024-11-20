@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import {
   isFinite,
-  isInstanceof,
+  isInstanceOf,
   isNaN,
   isNotFinite,
   isNotInstanceOf,
@@ -103,10 +103,10 @@ test("instanceof", () => {
     }
   }
 
-  isInstanceof(new Abc(), Object);
-  isInstanceof(new Abc(), Abc);
-  isInstanceof(new Xyz(), Object);
-  isInstanceof(new Xyz(), Xyz);
+  isInstanceOf(new Abc(), Object);
+  isInstanceOf(new Abc(), Abc);
+  isInstanceOf(new Xyz(), Object);
+  isInstanceOf(new Xyz(), Xyz);
   isNotInstanceOf(new Abc(), Xyz);
   isNotInstanceOf(null, Xyz);
   isNotInstanceOf(true, Xyz);
@@ -114,7 +114,7 @@ test("instanceof", () => {
 
   like(
     fails(() => {
-      isInstanceof(null, Abc);
+      isInstanceOf(null, Abc);
     }),
     {
       message: "Expected <null> to be an instance of Abc",
@@ -122,7 +122,7 @@ test("instanceof", () => {
   );
   like(
     fails(() => {
-      isInstanceof("omg", Abc);
+      isInstanceOf("omg", Abc);
     }),
     {
       message: 'Expected <string "omg"> to be an instance of Abc',
@@ -130,7 +130,7 @@ test("instanceof", () => {
   );
   like(
     fails(() => {
-      isInstanceof(new Xyz(), Abc);
+      isInstanceOf(new Xyz(), Abc);
     }),
     {
       message: "Expected [object Xyz] to be an instance of Abc",
