@@ -16,4 +16,6 @@ export {
 } from "node:assert/strict";
 
 export * from "./extra.js";
+export * from "./includes.js";
+export * from "./is-empty.js";
 export * from "./like.js";

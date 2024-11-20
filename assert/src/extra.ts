@@ -1,9 +1,10 @@
 import { AssertionError } from "node:assert";
+import { format } from "./format.js";
 
 export const isTrue = (actual: unknown, message?: string): asserts actual is true => {
   if (actual !== true) {
     throw new AssertionError({
-      message,
+      message: message || `Expected ${format(actual)} to be true`,
       actual,
       expected: true,
       operator: "===",
@@ -12,10 +13,10 @@ export const isTrue = (actual: unknown, message?: string): asserts actual is tru
   }
 };
 
-export const isNotTrue = (actual: unknown, message?: string) => {
+export const isNotTrue = <T>(actual: T, message?: string): asserts actual is Exclude<T, true> => {
   if (actual === true) {
     throw new AssertionError({
-      message,
+      message: message || `Expected ${format(actual)} not to be true`,
       actual,
       expected: true,
       operator: "!==",
@@ -27,7 +28,7 @@ export const isNotTrue = (actual: unknown, message?: string) => {
 export const isFalse = (actual: unknown, message?: string): asserts actual is false => {
   if (actual !== false) {
     throw new AssertionError({
-      message,
+      message: message || `Expected ${format(actual)} to be false`,
       actual,
       expected: false,
       operator: "===",
@@ -36,10 +37,10 @@ export const isFalse = (actual: unknown, message?: string): asserts actual is fa
   }
 };
 
-export const isNotFalse = (actual: unknown, message?: string) => {
+export const isNotFalse = <T>(actual: T, message?: string): asserts actual is Exclude<T, false> => {
   if (actual === false) {
     throw new AssertionError({
-      message,
+      message: message || `Expected ${format(actual)} not to be false`,
       actual,
       expected: false,
       operator: "!==",
@@ -51,7 +52,7 @@ export const isNotFalse = (actual: unknown, message?: string) => {
 export const isNull = (actual: unknown, message?: string): asserts actual is null => {
   if (actual !== null) {
     throw new AssertionError({
-      message,
+      message: message || `Expected ${format(actual)} to be null`,
       actual,
       expected: null,
       operator: "===",
@@ -60,10 +61,10 @@ export const isNull = (actual: unknown, message?: string): asserts actual is nul
   }
 };
 
-export const isNotNull = (actual: unknown, message?: string) => {
+export const isNotNull = <T>(actual: T, message?: string): asserts actual is Exclude<T, null> => {
   if (actual === null) {
     throw new AssertionError({
-      message,
+      message: message || `Expected ${format(actual)} not to be null`,
       actual,
       expected: null,
       operator: "!==",
@@ -75,7 +76,7 @@ export const isNotNull = (actual: unknown, message?: string) => {
 export const isUndefined = (actual: unknown, message?: string): asserts actual is undefined => {
   if (actual !== undefined) {
     throw new AssertionError({
-      message,
+      message: message || `Expected ${format(actual)} to be undefined`,
       actual,
       expected: undefined,
       operator: "===",
@@ -84,10 +85,10 @@ export const isUndefined = (actual: unknown, message?: string): asserts actual i
   }
 };
 
-export const isNotUndefined = (actual: unknown, message?: string) => {
+export const isNotUndefined = <T>(actual: T, message?: string): asserts actual is Exclude<T, undefined> => {
   if (actual === undefined) {
     throw new AssertionError({
-      message,
+      message: message || `Expected ${format(actual)} not to be undefined`,
       actual,
       expected: undefined,
       operator: "!==",
@@ -99,7 +100,7 @@ export const isNotUndefined = (actual: unknown, message?: string) => {
 export const isNullish = (actual: unknown, message?: string): asserts actual is null | undefined => {
   if (actual != null) {
     throw new AssertionError({
-      message,
+      message: message || `Expected ${format(actual)} to be nullish`,
       actual,
       expected: null,
       operator: "==",
@@ -108,10 +109,10 @@ export const isNullish = (actual: unknown, message?: string): asserts actual is 
   }
 };
 
-export const isNotNullish = (actual: unknown, message?: string) => {
+export const isNotNullish = <T>(actual: T, message?: string): asserts actual is Exclude<T, null | undefined> => {
   if (actual == null) {
     throw new AssertionError({
-      message,
+      message: message || `Expected ${format(actual)} not to be nullish`,
       actual,
       expected: null,
       operator: "!=",
@@ -120,162 +121,80 @@ export const isNotNullish = (actual: unknown, message?: string) => {
   }
 };
 
-export type WithIncludes = { includes(needle: unknown): boolean };
-export type WithHas = { has(needle: unknown): boolean };
-
-export const includes = (haystack: string | WithIncludes | WithHas, needle: unknown, message?: string) => {
-  if (typeof haystack === "string") {
-    if (typeof needle !== "string") {
-      throw new TypeError("Expected both arguments to be of the string type");
-    }
-    if (!haystack.includes(needle)) {
-      throw new AssertionError({
-        message: message || "Expected to include",
-        actual: haystack,
-        operator: "includes",
-        stackStartFn: includes,
-      });
-    }
-    return;
+export const isNaN = (actual: number, message?: string): asserts actual is number => {
+  if (typeof actual !== "number") {
+    throw new TypeError(`Expected ${format(actual)} to be a number`);
   }
-  if (haystack != null && "includes" in haystack && typeof haystack.includes === "function") {
-    if (!haystack.includes(needle)) {
-      throw new AssertionError({
-        message: message || "Expected to include",
-        actual: haystack,
-        operator: "includes",
-        stackStartFn: includes,
-      });
-    }
-    return;
+  if (!Number.isNaN(actual)) {
+    throw new AssertionError({
+      message: message || `Expected ${format(actual)} to be NaN`,
+      stackStartFn: isNaN,
+    });
   }
-  if (haystack != null && "has" in haystack && typeof haystack.has === "function") {
-    if (!haystack.has(needle)) {
-      throw new AssertionError({
-        message: message || "Expected to include",
-        actual: haystack,
-        operator: "includes",
-        stackStartFn: includes,
-      });
-    }
-    return;
-  }
-  throw new TypeError("Expected an object that has method 'includes' or 'has'");
 };
 
-export const doesNotInclude = (haystack: string | WithIncludes | WithHas, needle: unknown, message?: string) => {
-  if (typeof haystack === "string") {
-    if (typeof needle !== "string") {
-      throw new TypeError("Expected both arguments to be of the string type");
-    }
-    if (haystack.includes(needle)) {
-      throw new AssertionError({
-        message: message || "Expected to not include",
-        actual: haystack,
-        operator: "doesNotInclude",
-        stackStartFn: doesNotInclude,
-      });
-    }
-    return;
+export const isNotNaN = (actual: number, message?: string): asserts actual is number => {
+  if (typeof actual !== "number") {
+    throw new TypeError(`Expected ${format(actual)} to be a number`);
   }
-  if (haystack != null && "includes" in haystack && typeof haystack.includes === "function") {
-    if (haystack.includes(needle)) {
-      throw new AssertionError({
-        message: message || "Expected to not include",
-        actual: haystack,
-        operator: "doesNotInclude",
-        stackStartFn: doesNotInclude,
-      });
-    }
-    return;
+  if (Number.isNaN(actual)) {
+    throw new AssertionError({
+      message: message || `Expected ${format(actual)} not to be NaN`,
+      stackStartFn: isNotNaN,
+    });
   }
-  if (haystack != null && "has" in haystack && typeof haystack.has === "function") {
-    if (haystack.has(needle)) {
-      throw new AssertionError({
-        message: message || "Expected to not include",
-        actual: haystack,
-        operator: "doesNotInclude",
-        stackStartFn: doesNotInclude,
-      });
-    }
-    return;
-  }
-  throw new TypeError("Expected an object that has method 'includes' or 'has'");
 };
 
-export type WithLength = { readonly length: number };
-export type WithSize = { readonly size: number };
-
-export const isEmpty = (actual: string | WithLength | WithSize, message?: string) => {
-  if (typeof actual === "string") {
-    if (actual !== "") {
-      throw new AssertionError({
-        message: message || "Expected to be empty",
-        actual,
-        operator: "isEmpty",
-        stackStartFn: isEmpty,
-      });
-    }
-    return;
+export const isFinite = (actual: number, message?: string): asserts actual is number => {
+  if (typeof actual !== "number") {
+    throw new TypeError(`Expected ${format(actual)} to be a number`);
   }
-  if (actual != null && "length" in actual && typeof actual.length === "number") {
-    if (actual.length !== 0) {
-      throw new AssertionError({
-        message: message || "Expected to be empty",
-        actual,
-        operator: "isEmpty",
-        stackStartFn: isEmpty,
-      });
-    }
-    return;
+  if (!Number.isFinite(actual)) {
+    throw new AssertionError({
+      message: message || `Expected ${format(actual)} to be a finite number`,
+      stackStartFn: isFinite,
+    });
   }
-  if (actual != null && "size" in actual && typeof actual.size === "number") {
-    if (actual.size !== 0) {
-      throw new AssertionError({
-        message: message || "Expected to be empty",
-        actual,
-        operator: "isEmpty",
-        stackStartFn: isEmpty,
-      });
-    }
-    return;
-  }
-  throw new TypeError("Expected an object that has property 'length' or 'size'");
 };
 
-export const isNotEmpty = (actual: string | WithLength | WithSize, message?: string) => {
-  if (typeof actual === "string") {
-    if (actual === "") {
-      throw new AssertionError({
-        message: message || "Expected to be not empty",
-        actual,
-        operator: "isNotEmpty",
-        stackStartFn: isNotEmpty,
-      });
-    }
-    return;
+export const isNotFinite = (actual: number, message?: string): asserts actual is number => {
+  if (typeof actual !== "number") {
+    throw new TypeError(`Expected ${format(actual)} to be a number`);
   }
-  if (actual != null && "length" in actual && typeof actual.length === "number") {
-    if (actual.length === 0) {
-      throw new AssertionError({
-        message: message || "Expected to be not empty",
-        actual,
-        operator: "isNotEmpty",
-        stackStartFn: isNotEmpty,
-      });
-    }
-    return;
+  if (Number.isFinite(actual)) {
+    throw new AssertionError({
+      message: message || `Expected ${format(actual)} not to be a finite number`,
+      stackStartFn: isNotFinite,
+    });
   }
-  if (actual != null && "size" in actual && typeof actual.size === "number") {
-    if (actual.size === 0) {
-      throw new AssertionError({
-        message: message || "Expected to be not empty",
-        actual,
-        operator: "isNotEmpty",
-        stackStartFn: isNotEmpty,
-      });
-    }
-    return;
+};
+
+type Constructor<T> = {
+  new (...args: any[]): T;
+};
+
+export const isInstanceof = <T>(
+  actual: unknown,
+  constructor: Constructor<T>,
+  message?: string,
+): asserts actual is T => {
+  if (!(actual instanceof constructor)) {
+    throw new AssertionError({
+      message: message || `Expected ${format(actual)} to be an instance of ${constructor.name}`,
+      stackStartFn: isInstanceof,
+    });
   }
-  throw new TypeError("Expected an object that has property 'length' or 'size'");
+};
+
+export const isNotInstanceOf = <T, U>(
+  actual: T,
+  constructor: Constructor<U>,
+  message?: string,
+): asserts actual is Exclude<T, U> => {
+  if (actual instanceof constructor) {
+    throw new AssertionError({
+      message: message || `Expected ${format(actual)} not to be an instance of ${constructor.name}`,
+      stackStartFn: isNotInstanceOf,
+    });
+  }
 };
